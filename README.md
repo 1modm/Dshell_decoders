@@ -1,18 +1,11 @@
 # Dshell
 An extensible network forensic analysis framework.  Enables rapid development of plugins to support the dissection of network packet captures.
 
-Key features:
+
+[Dshell Repo](https://github.com/USArmyResearchLab/Dshell)
 
 
-* Robust stream reassembly
-* IPv4 and IPv6 support
-* Custom output handlers
-* Chainable decoders
-
-[Dshell](https://github.com/USArmyResearchLab/Dshell)
-
-
-# Custom Dshell_decoders
+# Custom Dshell decoders
 SIP and RTP decoders for Dshell
 
 ```
