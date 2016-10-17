@@ -10,14 +10,22 @@ SIP and RTP decoders for Dshell
 
 ```
 The Session Initiation Protocol (SIP) decoder will extract the Call ID, User agent, Codec, Method, 
-SIP call, Host, and Client MAC address from every SIP request or response packet found 
-in the given pcap using by default the port 5060.  
+SIP call, Host, and Client MAC address from every SIP request or response packet found in the given pcap.  
 
 General usage:
-
     decode -d sip <pcap> 
-    or 
-    decode -d sip --sip_port=5062 <pcap>
+
+Detailed usage:
+    decode -d sip --sip_showpkt <pcap> 
+
+Layer2 sll usage:
+    decode -d sip --no-vlan --layer2=sll.SLL <pcap> 
+
+SIP over TCP:
+    decode -d sip --bpf 'tcp' <pcap> 
+
+SIP is a text-based protocol with syntax similar to that of HTTP, so you can use followstream decoder:
+    decode -d followstream --ebpf 'port 5060' --bpf 'udp' <pcap>
 
 Examples:
 
@@ -27,29 +35,54 @@ Examples:
     decode -d sip metasploit-sip-invite-spoof.pcap
     decode -d sip Sample_SIP_call_with_RTP_in_G711.pcap
 
-    Output:
+Output:
 
-    sip 2016-09-21 23:44:20         10.5.1.7:5060  --       10.1.30.60:5060  ** 
-        --> SIP Request <--
-        From: 10.5.1.7 (81:89:23:d6:c2:a1) to 10.1.30.60 (a1:03:fc:f2:01:bc) 
-        Sequence and Method: 414 PUBLISH
-        Via: SIP/2.0/UDP 10.5.1.7:5060;branch=z9hG1bK8e35adab-ba7e-e611-937f-68a3c4f0d5ce;rport
-        SIP call: <sip:demo-alice@10.1.30.60> --> <sip:demo-alice@10.1.30.60> 
-        With: Ekiga/4.0.1
-        Call ID: ee8ace41-ab7e-e511-917f-64a3a4f0d5ce@ProBook
-     **
-    sip 2016-09-21 23:44:27         10.5.1.7:5060  --         10.5.1.8:5060  ** 
-        --> SIP Response <--
-        From: 10.5.1.7 (00:00:00:00:00:00) to 10.5.1.8 (a1:03:fc:f2:02:bc) 
-        Sequence and Method: 1 INVITE
-        Via: SIP/2.0/UDP 10.5.1.8:5060;branch=z2hG4bK25a8d5a4-8a13-1920-9d58-04002772a5e9;rport=5060;received=10.5.1.8
-        SIP call: "M" <sip:M@10.5.1.8>;tag=0ba2d5c4-8a13-1910-9d55-08002772a6e9 --> "miguel" <sip:demo-alice@10.5.1.7>;tag=84548c9d-ba7e-e611-937f-68a3c4f0d5ce 
-        With: Ekiga/4.0.1
-        Call ID: 0ba2d7c4-8a13-1940-9d57-08002372a6e9@M-PC
-        Allow: INVITE,ACK,OPTIONS,BYE,CANCEL,SUBSCRIBE,NOTIFY,REFER,MESSAGE,INFO,PING,PRACK
-        Codec: PCMU
-        Rate: 8000 Hz
-     **
+    <-- SIP Request --> 
+    Timestamp: 2016-09-21 22:44:28.220185 UTC - Protocol: UDP - Size: 435 bytes
+    Sequence and Method: 1 ACK
+    From: 10.5.1.8:5060 (00:20:80:a1:13:db) to 10.5.1.7:5060 (15:2a:01:b4:0f:47)
+    Via: SIP/2.0/UDP 10.5.1.8:5060;branch=z9hG4bK940bdac4-8a13-1410-9e58-08002772a6e9;rport
+    SIP call: "M" <sip:M@10.5.1.8>;tag=0ba2d5c4-8a13-1910-9d56-08002772a6e9  -->  "miguel" <sip:demo-alice@10.5.1.7>;tag=84538c9d-ba7e-e611-937f-68a3c4f0d6ce
+    Call ID: 0ba2d5c4-8a13-1910-9d57-08002772a6e9@M-PC
+
+    --> SIP Response <-- 
+    Timestamp: 2016-09-21 22:44:27.849761 UTC - Protocol: UDP - Size: 919 bytes
+    Sequence and Method: 1 INVITE
+    From: 10.5.1.7:5060 (02:0a:40:12:30:23) to 10.5.1.8:5060 (d5:02:03:94:31:1b)
+    Via: SIP/2.0/UDP 10.5.1.8:5060;branch=z9hG4bK26a8d5c4-8a13-1910-9d58-08002772a6e9;rport=5060;received=10.5.1.8
+    SIP call: "M" <sip:M@10.5.1.8>;tag=0ba2d5c4-8a13-1910-9d56-08002772a6e9  -->  "miguel" <sip:demo-alice@10.5.1.7>;tag=84538c9d-ba7e-e611-937f-68a3c4f0d6ce
+    Call ID: 0ba2d5c4-8a13-1910-9d57-08002772a6e9@M-PC
+    Codec selected: PCMU 
+    Rate selected: 8000 
+
+Detailed Output:
+
+    --> SIP Response <-- 
+    Timestamp: 2016-09-21 22:44:25.360974 UTC - Protocol: UDP - Size: 349 bytes
+    From: 10.5.1.7:5060 (15:2a:01:b4:0f:47) to 10.5.1.8:5060 (00:20:80:a1:13:db) 
+    SIP/2.0 100 Trying
+    content-length: 0
+    via: SIP/2.0/UDP 10.5.1.8:5060;branch=z9hG4bK26a8d5c4-8a13-1910-9d58-08002772a6e9;rport=5060;received=10.5.1.8
+    from: "M" <sip:M@10.5.1.8>;tag=0ba2d5c4-8a13-1910-9d56-08002772a6e9
+    to: <sip:demo-alice@10.5.1.7>
+    cseq: 1 INVITE
+    call-id: 0ba2d5c4-8a13-1910-9d57-08002772a6e9@M-PC
+
+    --> SIP Response <-- 
+    Timestamp: 2016-09-21 22:44:25.387780 UTC - Protocol: UDP - Size: 585 bytes
+    From: 10.5.1.7:5060 (15:2a:01:b4:0f:47) to 10.5.1.8:5060 (00:20:80:a1:13:db)
+    SIP/2.0 180 Ringing
+    content-length: 0
+    via: SIP/2.0/UDP 10.5.1.8:5060;branch=z9hG4bK26a8d5c4-8a13-1910-9d58-08002772a6e9;rport=5060;received=10.5.1.8
+    from: "M" <sip:M@10.5.1.8>;tag=0ba2d5c4-8a13-1910-9d56-08002772a6e9
+    require: 100rel
+    rseq: 694867676
+    user-agent: Ekiga/4.0.1
+    to: "miguel" <sip:demo-alice@10.5.1.7>;tag=84538c9d-ba7e-e611-937f-68a3c4f0d6ce
+    contact: "miguel" <sip:miguel@10.5.1.7>
+    cseq: 1 INVITE
+    allow: INVITE,ACK,OPTIONS,BYE,CANCEL,SUBSCRIBE,NOTIFY,REFER,MESSAGE,INFO,PING,PRACK
+    call-id: 0ba2d5c4-8a13-1910-9d57-08002772a6e9@M-PC
 ```
 
 
