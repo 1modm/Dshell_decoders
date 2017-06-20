@@ -125,7 +125,6 @@ Examples:
 ```
 
 
-# Custom Dshell for Penetration/Exploit/Hijacking Tools
 Penetration/Exploit/Hijacking Tools decoder for Dshell
 
 ```
