@@ -124,3 +124,58 @@ Examples:
 
 ```
 
+
+# Custom Dshell for Penetration/Exploit/Hijacking Tools
+Penetration/Exploit/Hijacking Tools decoder for Dshell
+
+```
+The Penetration/Exploit/Hijacking Tool detector will identify the tool used to scan or exploit a server using the
+User agent, URI or HTTP content.
+
+General usage:
+    decode -d peht <pcap> 
+
+Detailed usage:
+    decode -d peht --peht_showcontent <pcap> 
+
+Output:
+
+    Request Timestamp (UTC): 2017-07-16 02:41:47.238549 
+    Penetration/Exploit/Hijacking Tool: Open Vulnerability Assessment System
+    User-Agent: Mozilla/5.0 [en] (X11, U; OpenVAS 8.0.9)
+    Request Method: GET
+    URI: /scripts/session/login.php
+    Source IP: 1.2.3.4 - Source port: 666 - MAC: 50:b4:02:39:24:56
+    Host requested: example.com
+
+    Response Timestamp (UTC): 2017-07-16 02:41:48.238549
+    Response Reason: Not Found
+    Response Status: 404
+    Destination IP: 192.168.1.1 - Destination port: 80 - MAC: a4:42:ab:56:b6:23
+
+
+    Detailed Output:
+
+    Request Timestamp (UTC): 2017-07-16 02:41:47.238549 
+    Penetration/Exploit/Hijacking Tool: Arbitrary Remote Code Execution/injection
+    User-Agent: Wget(linux)
+    Request Method: POST
+    URI: /command.php
+    Source IP: 1.2.3.4 - Source port: 666 - MAC: 50:b4:02:39:24:56
+    Host requested: example.com
+
+    cmd=%63%64%20%2F%76%61%72%2F%74%6D%70%20%26%26%20%65%63%68%6F%20%2D%6E%65%20%5C%5C%78%33%6B%65%72%20%3E%20%6B%65%72%2E%74%78%74%20%26%26%20%63%61%74%20%6B%65%72%2E%74%78%74
+
+    Response Timestamp (UTC): 2017-07-16 02:41:48.238549
+    Response Reason: Found
+    Response Status: 302
+    Destination IP: 192.168.1.1 - Destination port: 80 - MAC: a4:42:ab:56:b6:23
+
+    <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+    <html><head>
+    <title>302 Found</title>
+    </head><body>
+    <h1>Found</h1>
+    <p>The document has moved <a href="https://example.com/command.php">here</a>.</p>
+    </body></html>
+```
