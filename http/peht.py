@@ -109,7 +109,9 @@ Output:
     </body></html>
 
 """,
-            filter='tcp',
+            filter='tcp and (port 80 or port 81 or port 8080 or port 8000)',
+            filterfn=lambda ((sip, sp), (dip, dp)): sp in (
+                                 80, 81, 8000, 8080) or dp in (80, 81, 8000, 8080),
             author='mm',
             optiondict={
                 'showcontent': {'action': 'store_true', 'default': False, 'help': 'Display the request and response body content.'}
@@ -226,8 +228,8 @@ Output:
                 if request.headers.has_key('user-agent'):
                     self.request_user_agent = request.headers['user-agent']
 
-                self.out.write("\nRequest Timestamp (UTC): {0} \nPenetration/Exploit/Hijacking Tool: {1}\nUser-Agent: {2}\nRequest Method: {3}\nURI: {4}\nSource IP: {5} - Source port: {6} - MAC: {7}\nHost requested: {8}\n".format(datetime.datetime.utcfromtimestamp(
-                                requesttime), self.request_ioc, self.request_user_agent, self.request_method, request.uri, conn.sip, conn.sport, conn.smac, self.request_host), formatTag="H2", direction=self.direction)
+                self.out.write("\nRequest Timestamp (UTC): {0} \nPenetration/Exploit/Hijacking Tool: {1}\nUser-Agent: {2}\nRequest Method: {3}\nURI: {4}\nSource IP: {5} - Source port: {6} - MAC: {7}\nHost requested: {8}\nReferer: {9}\n".format(datetime.datetime.utcfromtimestamp(
+                                requesttime), self.request_ioc, self.request_user_agent, self.request_method, request.uri, conn.sip, conn.sport, conn.smac, self.request_host, self.request_referer), formatTag="H2", direction=self.direction)
 
                 # Show request body content
                 if self.showcontent:                
