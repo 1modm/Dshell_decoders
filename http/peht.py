@@ -147,7 +147,11 @@ Output:
             ET_identified = 'Arbitrary Remote Code Execution/injection'
 
         if payloadheader.has_key('content-type'):
-            if ('cmd' and 'ProcessBuilder' and 'struts') in payloadheader['content-type']:
+            struts_check = ['cmd', 'ProcessBuilder', 'struts']
+            #Will return empty if all words from a are in sentence
+            chk = list(filter(lambda x: x not in payloadheader['content-type'], struts_check))
+            if not chk:
+            #if ('cmd' and 'ProcessBuilder' and 'struts') in payloadheader['content-type']:
                 ET_identified = 'Apache Struts Content-Type arbitrary command execution'
 
         if payloadheader.has_key('user-agent'):
