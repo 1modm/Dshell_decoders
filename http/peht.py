@@ -147,11 +147,10 @@ Output:
             ET_identified = 'Arbitrary Remote Code Execution/injection'
 
         if payloadheader.has_key('content-type'):
-            struts_check = ['cmd', 'ProcessBuilder', 'struts']
-            #Will return empty if all words from struts_check are in payloadheader['content-type']
-            chk = list(filter(lambda x: x not in payloadheader['content-type'], struts_check))
-            if not chk:
-            #if ('cmd' and 'ProcessBuilder' and 'struts') in payloadheader['content-type']:
+            struts_ioc = ['cmd', 'ProcessBuilder', 'struts']
+            #Will return empty if all words from struts_ioc are in payloadheader['content-type']
+            struts_check = list(filter(lambda x: x not in payloadheader['content-type'], struts_ioc))
+            if not struts_check:
                 ET_identified = 'Apache Struts Content-Type arbitrary command execution'
 
         if payloadheader.has_key('user-agent'):
@@ -257,7 +256,6 @@ Output:
                     # Show response body content
                     if self.showcontent:                
                         self.out.write("\n{0}\n".format(self.response_body), formatTag="H2", direction=self.direction)
-
 
 if __name__ == '__main__':
     dObj = DshellDecoder()
