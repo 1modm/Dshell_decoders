@@ -148,7 +148,7 @@ Output:
 
         if payloadheader.has_key('content-type'):
             struts_check = ['cmd', 'ProcessBuilder', 'struts']
-            #Will return empty if all words from a are in sentence
+            #Will return empty if all words from struts_check are in payloadheader['content-type']
             chk = list(filter(lambda x: x not in payloadheader['content-type'], struts_check))
             if not chk:
             #if ('cmd' and 'ProcessBuilder' and 'struts') in payloadheader['content-type']:
